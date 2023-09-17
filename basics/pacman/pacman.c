@@ -1,18 +1,8 @@
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+#include "pacman.h"
+#include "mystr.h"
 
-
-typedef unsigned int uint;
 
 // TODO: colorful symbols
-// enum SYMBOL_COLOR {
-//     DEFAULT,
-//     BLUE,
-//     RED,
-// };
 //
 // char* color_symbol (char* res, char ch, enum SYMBOL_COLOR color) {
 //     switch(color) {
@@ -28,20 +18,6 @@ typedef unsigned int uint;
 //     return res;
 // }
 
-struct Player {
-    uint xpos;
-    uint ypos;
-    uint score;
-};
-enum DIRECTION {
-    LEFT = 4,
-    BACK = 5,
-    RIGHT = 6,
-    FORWARD = 8,
-};
-const char CELL = '+';
-const char FOOD = '*';
-const char PACMAN = '<';
 uint FIELD_SIZE;
 uint FOOD_X;
 uint FOOD_Y;
@@ -89,7 +65,7 @@ void start () {
     FIELD_SIZE = read_uint();
     if (FIELD_SIZE  < 2) {
         puts("N should be at least 2\n");
-        return;
+        exit(0);
     }
     FOOD_X = FIELD_SIZE - 1;
     FOOD_Y = FIELD_SIZE - 1;
@@ -136,7 +112,12 @@ void game () {
     }
     game_over(&player);
 }
+
 int main (int argc, char** argv) {
-    game();
+    // game();
+    assert (my_strlen("") == 0);
+    assert (my_strlen("1") == 1);
+    assert (my_strlen("my string") == 9);
+    char source[] = "source";
     return 0;
 }
