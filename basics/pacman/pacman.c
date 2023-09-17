@@ -1,21 +1,9 @@
 #include "pacman.h"
 
-void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
-    switch(color) {
-        case DEFAULT:
-            printf("%s%c ", COLOR_DEFAULT, ch);
-            break;
-        case RED:
-            printf("%s%c%s ", COLOR_RED, ch, COLOR_DEFAULT);
-            break;
-        case BLUE:
-            printf("%s%c%s ", COLOR_BLUE, ch, COLOR_DEFAULT);
-            break;
-        case GREEN:
-            printf("%s%c%s ", COLOR_GREEN, ch, COLOR_DEFAULT);
-            break;
-    }
-} 
+const char* COLOR_DEFAULT = "\x1b[0m";
+const char* COLOR_RED = "\x1b[1;31m";
+const char* COLOR_GREEN = "\x1b[1;32m";
+const char* COLOR_BLUE = "\x1b[1;34m";
 
 uint FIELD_SIZE;
 uint FOOD_X;
@@ -32,16 +20,32 @@ uint read_uint () {
     assert(value >= 0);
     return value;
 }
+void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
+    switch(color) {
+        case DEFAULT:
+            printf("%s%c ", COLOR_DEFAULT, ch);
+            break;
+        case RED:
+            printf("%s%c%s ", COLOR_RED, ch, COLOR_DEFAULT);
+            break;
+        case BLUE:
+            printf("%s%c%s ", COLOR_BLUE, ch, COLOR_DEFAULT);
+            break;
+        case GREEN:
+            printf("%s%c%s ", COLOR_GREEN, ch, COLOR_DEFAULT);
+            break;
+    }
+}
 void draw (struct Player* player) {
-    assert(player->xpos < FIELD_SIZE && player->ypos < FIELD_SIZE);
+    assert(player->coords.x < FIELD_SIZE && player->coords.y < FIELD_SIZE);
     system("clear");
     printf("\n");
     for (size_t x = 0; x < FIELD_SIZE; x++) {
         for (size_t y = 0; y < FIELD_SIZE; y++) {
-            if (x == FIELD_SIZE - player->ypos - 1 && y == player->xpos) { 
+            if (x == FIELD_SIZE - player->coords.y - 1 && y == player->coords.x) { 
                 print_colored_symbol(PACMAN, GREEN);
             } else if (x == 0 && y == FIELD_SIZE-1) {
-                print_colored_symbol(FOOD, RED);
+                print_colored_symbol(FOOD, BLUE);
             } else {
                 print_colored_symbol(CELL, DEFAULT);
             }
@@ -71,30 +75,30 @@ void start () {
     FOOD_Y = FIELD_SIZE - 1;
 }
 void move (struct Player* player, enum DIRECTION dir) {
-    assert(player->xpos < FIELD_SIZE && player->ypos < FIELD_SIZE);
+    assert(player->coords.x < FIELD_SIZE && player->coords.y < FIELD_SIZE);
     switch (dir) {
         case 4:
-            if (player->xpos != 0) {
-                player->xpos--;
+            if (player->coords.x != 0) {
+                player->coords.x--;
             } break;
         case 5:
-            if (player->ypos != 0) {
-                player->ypos--;
+            if (player->coords.y != 0) {
+                player->coords.y--;
             } break;
         case 6:
-            if (player->xpos != FIELD_SIZE - 1) {
-                player->xpos++;
+            if (player->coords.x != FIELD_SIZE - 1) {
+                player->coords.x++;
             } break;
         case 8:
-            if (player->ypos != FIELD_SIZE - 1) {
-                player->ypos++;
+            if (player->coords.y != FIELD_SIZE - 1) {
+                player->coords.y++;
             } break;
     }
     player->score++;
 }
 
 bool is_game_over (struct Player* player) {
-    return player->xpos == FOOD_X && player->ypos == FOOD_Y;
+    return player->coords.x == FOOD_X && player->coords.y == FOOD_Y;
 }
 
 void game_over (struct Player* player) {
@@ -102,7 +106,7 @@ void game_over (struct Player* player) {
 }
 
 void game () {
-    struct Player player = { 0 };
+    struct Player player = {.coords = {.x = 0, .y = 0}, .score = 0};
     start();
     draw(&player);
     while (!is_game_over(&player)) {
@@ -115,6 +119,5 @@ void game () {
 
 int main (int argc, char** argv) {
     game();
-    puts("123");
     return EXIT_SUCCESS;
 }

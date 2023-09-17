@@ -8,9 +8,12 @@
 
 typedef unsigned int uint;
 
+struct Coord {
+    uint x;
+    uint y;
+};
 struct Player {
-    uint xpos;
-    uint ypos;
+    struct Coord coords;
     uint score;
 };
 enum DIRECTION {
@@ -28,10 +31,7 @@ enum SYMBOL_COLOR {
 const char CELL = '+';
 const char FOOD = 'o';
 const char PACMAN = '<';
-const char* COLOR_DEFAULT = "\x1b[0m";
-const char* COLOR_RED = "\x1b[1;31m";
-const char* COLOR_GREEN = "\x1b[1;32m";
-const char* COLOR_BLUE = "\x1b[1;34m";
+const uint N_TRAPS = 2;
 uint read_uint ();
 uint read_instruction ();
 
@@ -39,6 +39,7 @@ void draw (struct Player* );
 void start ();
 void move (struct Player* , enum DIRECTION );
 void game ();
+void print_colored_symbol (char ch, enum SYMBOL_COLOR color);
 
 bool is_game_over (struct Player* );
 void game_over (struct Player* );
