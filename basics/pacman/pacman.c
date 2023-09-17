@@ -38,7 +38,6 @@ void draw (struct Player* player) {
     printf("\n");
     for (size_t x = 0; x < FIELD_SIZE; x++) {
         for (size_t y = 0; y < FIELD_SIZE; y++) {
-            char ch = '+';
             if (x == FIELD_SIZE - player->ypos - 1 && y == player->xpos) { 
                 print_colored_symbol(PACMAN, GREEN);
             } else if (x == 0 && y == FIELD_SIZE-1) {
@@ -116,7 +115,6 @@ void game () {
 
 int main (int argc, char** argv) {
     game();
-    // printf("%s%c%s", COLOR_RED, '*', COLOR_DEFAULT);
-
-    return 0;
+    puts("123");
+    return EXIT_SUCCESS;
 }
