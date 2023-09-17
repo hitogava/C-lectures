@@ -24,7 +24,11 @@ void my_strcpy(char* dest, const char* source) {
 }
 
 char* my_strcat (char* destination, const char* append) {
-    char buffer[my_strlen(destination)];
-    my_strcpy(buffer, destination);
-    return NULL;
+    assert(destination && append);
+    size_t dest_len = my_strlen(destination);  
+    size_t app_len = my_strlen(destination);  
+    for (size_t i = 0; i < app_len; i++) {
+        destination[dest_len + i] = append[i];
+    }
+    return destination;
 }
