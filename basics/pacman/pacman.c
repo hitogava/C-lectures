@@ -1,5 +1,4 @@
 #include "pacman.h"
-#include "mystr.h"
 
 void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
     switch(color) {
