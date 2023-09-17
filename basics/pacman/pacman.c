@@ -1,22 +1,22 @@
 #include "pacman.h"
 #include "mystr.h"
 
-
-// TODO: colorful symbols
-//
-// char* color_symbol (char* res, char ch, enum SYMBOL_COLOR color) {
-//     switch(color) {
-//         case DEFAULT:
-//             strcat(res, "\x1b[0m");
-//             strcat(res, &ch);
-//         case RED:
-//             strcat(res, "\x1b[1;31m");
-//             strcat(res, &ch);
-//         case BLUE:
-//             strcat(res, &ch);
-//     }
-//     return res;
-// }
+void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
+    switch(color) {
+        case DEFAULT:
+            printf("%s%c ", COLOR_DEFAULT, ch);
+            break;
+        case RED:
+            printf("%s%c%s ", COLOR_RED, ch, COLOR_DEFAULT);
+            break;
+        case BLUE:
+            printf("%s%c%s ", COLOR_BLUE, ch, COLOR_DEFAULT);
+            break;
+        case GREEN:
+            printf("%s%c%s ", COLOR_GREEN, ch, COLOR_DEFAULT);
+            break;
+    }
+} 
 
 uint FIELD_SIZE;
 uint FOOD_X;
@@ -39,19 +39,21 @@ void draw (struct Player* player) {
     printf("\n");
     for (size_t x = 0; x < FIELD_SIZE; x++) {
         for (size_t y = 0; y < FIELD_SIZE; y++) {
-            char c = CELL;
-             if (x == FIELD_SIZE - player->ypos - 1 && y == player->xpos) { 
-                c = PACMAN;
+            char ch = '+';
+            if (x == FIELD_SIZE - player->ypos - 1 && y == player->xpos) { 
+                print_colored_symbol(PACMAN, GREEN);
             } else if (x == 0 && y == FIELD_SIZE-1) {
-                c = FOOD;
-            } 
-            printf("%c ", c);
+                print_colored_symbol(FOOD, RED);
+            } else {
+                print_colored_symbol(CELL, DEFAULT);
+            }
         }
         printf("\n");
     }
     printf("\n");
 }
 uint read_instruction () {
+    printf("%s", COLOR_DEFAULT);
     puts("Enter the instruction:");
     uint ins = read_uint();
     if (ins != 4 && ins != 5 && ins!=6 && ins!=8) {
@@ -115,5 +117,7 @@ void game () {
 
 int main (int argc, char** argv) {
     game();
+    // printf("%s%c%s", COLOR_RED, '*', COLOR_DEFAULT);
+
     return 0;
 }

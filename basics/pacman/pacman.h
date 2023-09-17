@@ -26,10 +26,12 @@ enum SYMBOL_COLOR {
     GREEN
 };
 const char CELL = '+';
-const char FOOD = '*';
+const char FOOD = 'o';
 const char PACMAN = '<';
 const char* COLOR_DEFAULT = "\x1b[0m";
 const char* COLOR_RED = "\x1b[1;31m";
+const char* COLOR_GREEN = "\x1b[1;32m";
+const char* COLOR_BLUE = "\x1b[1;34m";
 uint read_uint ();
 uint read_instruction ();
 
