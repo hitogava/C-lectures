@@ -114,13 +114,6 @@ void game () {
 }
 
 int main (int argc, char** argv) {
-    // game();
-    assert (my_strlen("") == 0);
-    assert (my_strlen("1") == 1);
-    assert (my_strlen("my string") == 9);
-    const char source[] = "str2";
-    char dest[] = "destination ";
-    my_strcat(dest, NULL);
-    printf("%s\n", dest);
+    game();
     return 0;
 }

@@ -1,9 +1,0 @@
-{
-    "makefile.launchConfigurations": [
-        {
-            "cwd": "/home/hitogava/prog/c/lectures/basics/pacman",
-            "binaryPath": "/home/hitogava/prog/c/lectures/basics/pacman/pacman",
-            "binaryArgs": []
-        }
-    ]
-}
