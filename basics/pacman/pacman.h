@@ -8,6 +8,11 @@
 
 typedef unsigned int uint;
 
+const char CELL = '+';
+const char FOOD = 'o';
+const char PACMAN = '<';
+const uint N_TRAPS = 2;
+
 struct Coord {
     uint x;
     uint y;
@@ -15,6 +20,10 @@ struct Coord {
 struct Player {
     struct Coord coords;
     uint score;
+};
+struct World {
+    struct Player* player;
+    struct Coord traps[N_TRAPS];
 };
 enum DIRECTION {
     LEFT = 4,
@@ -28,19 +37,15 @@ enum SYMBOL_COLOR {
     RED,
     GREEN
 };
-const char CELL = '+';
-const char FOOD = 'o';
-const char PACMAN = '<';
-const uint N_TRAPS = 2;
 uint read_uint ();
 uint read_instruction ();
 
-void draw (struct Player* );
+void draw (struct World* );
 void start ();
-void move (struct Player* , enum DIRECTION );
+void move (struct World* , enum DIRECTION );
 void game ();
 void print_colored_symbol (char ch, enum SYMBOL_COLOR color);
 
-bool is_game_over (struct Player* );
-void game_over (struct Player* );
+bool is_game_over (struct World* );
+void game_over (struct World* );
 #endif

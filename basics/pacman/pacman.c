@@ -36,13 +36,13 @@ void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
             break;
     }
 }
-void draw (struct Player* player) {
-    assert(player->coords.x < FIELD_SIZE && player->coords.y < FIELD_SIZE);
+void draw (struct World* world) {
+    assert(world->player->coords.x < FIELD_SIZE && world->player->coords.y < FIELD_SIZE);
     system("clear");
     printf("\n");
     for (size_t x = 0; x < FIELD_SIZE; x++) {
         for (size_t y = 0; y < FIELD_SIZE; y++) {
-            if (x == FIELD_SIZE - player->coords.y - 1 && y == player->coords.x) { 
+            if (x == FIELD_SIZE - world->player->coords.y - 1 && y == world->player->coords.x) { 
                 print_colored_symbol(PACMAN, GREEN);
             } else if (x == 0 && y == FIELD_SIZE-1) {
                 print_colored_symbol(FOOD, BLUE);
@@ -74,47 +74,48 @@ void start () {
     FOOD_X = FIELD_SIZE - 1;
     FOOD_Y = FIELD_SIZE - 1;
 }
-void move (struct Player* player, enum DIRECTION dir) {
-    assert(player->coords.x < FIELD_SIZE && player->coords.y < FIELD_SIZE);
+void move (struct World* world, enum DIRECTION dir) {
+    assert(world->player->coords.x < FIELD_SIZE && world->player->coords.y < FIELD_SIZE);
     switch (dir) {
         case LEFT:
-            if (player->coords.x != 0) {
-                player->coords.x--;
+            if (world->player->coords.x != 0) {
+                world->player->coords.x--;
             } break;
         case BACK:
-            if (player->coords.y != 0) {
-                player->coords.y--;
+            if (world->player->coords.y != 0) {
+                world->player->coords.y--;
             } break;
         case RIGHT:
-            if (player->coords.x != FIELD_SIZE - 1) {
-                player->coords.x++;
+            if (world->player->coords.x != FIELD_SIZE - 1) {
+                world->player->coords.x++;
             } break;
         case FORWARD:
-            if (player->coords.y != FIELD_SIZE - 1) {
-                player->coords.y++;
+            if (world->player->coords.y != FIELD_SIZE - 1) {
+                world->player->coords.y++;
             } break;
     }
-    player->score++;
+    world->player->score++;
 }
 
-bool is_game_over (struct Player* player) {
-    return player->coords.x == FOOD_X && player->coords.y == FOOD_Y;
+bool is_game_over (struct World* world) {
+    return world->player->coords.x == FOOD_X && world->player->coords.y == FOOD_Y;
 }
 
-void game_over (struct Player* player) {
-    printf("GAME OVER!\nYour score: %u\n", player->score);
+void game_over (struct World* world) {
+    printf("GAME OVER!\nYour score: %u\n", world->player->score);
 }
 
 void game () {
     struct Player player = {.coords = {.x = 0, .y = 0}, .score = 0};
+    struct World world = { .player = &player };
     start();
-    draw(&player);
-    while (!is_game_over(&player)) {
+    draw(&world);
+    while (!is_game_over(&world)) {
         uint ins = read_instruction();
-        move(&player, ins);
-        draw(&player);
+        move(&world, ins);
+        draw(&world);
     }
-    game_over(&player);
+    game_over(&world);
 }
 
 int main (int argc, char** argv) {
