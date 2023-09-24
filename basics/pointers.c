@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <sys/resource.h>
+// #include <unistd.h>
 
 void swap (int64_t* a, int64_t* b) {
     *a += *b;
@@ -37,26 +39,33 @@ void perform_evil_scanf () {
     printf("%d %d %d\n", x, y, z);
 }
 
-int* foo() {
-    int local = 10;
-    int *plocal = &local;
-    return plocal;
+void boo() {
+    int a;
+    printf("Address of a inside boo %p\n", &a);
 }
-
+void foo() {
+    boo();
+}
+// problem 1
 void perform_problem_1 () {
-    // Trying to return a pointer to local variable "local" in foo()
-    // Should works because stack hasn't been overwritten by other functions
-    int* p = foo();
-    printf("%d\n", *p);
-
-    // But now stack is overwritten by calling funcion perform_evil_scanf()
-    // Still undefined behavior
-    p = foo();
-    perform_evil_scanf();
-    printf("%d\n", *p);
-
+    boo();
+    foo();
 }
 
+//problem 5
+void overflowFoo (char* head, char* curr) {
+    char v;
+    curr = &v;
+    printf("%td\n", head - curr);
+    return overflowFoo(head, curr);
+}
+void perform_problem_5 () {
+    char h;
+    overflowFoo(&h, NULL);
+    struct rlimit rl;
+    getrlimit(RLIMIT_STACK, &rl);
+    printf("%lu\n", rl.rlim_cur);
+}
 int main (int argc, char** argv) {
     return 0;
 }
