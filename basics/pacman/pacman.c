@@ -1,4 +1,5 @@
 #include "pacman.h"
+#include <stdlib.h>
 
 const char* COLOR_DEFAULT = "\x1b[0m";
 const char* COLOR_RED = "\x1b[1;31m";
@@ -8,7 +9,7 @@ const char* COLOR_BLUE = "\x1b[1;34m";
 uint FIELD_SIZE;
 uint FOOD_X;
 uint FOOD_Y;
-uint read_uint () {
+uint readUint () {
     int value;
     int argc = scanf("%d", &value);
     if (argc != 1 || value < 0) {
@@ -20,7 +21,7 @@ uint read_uint () {
     assert(value >= 0);
     return value;
 }
-void print_colored_symbol (char ch, enum SYMBOL_COLOR color) {
+void printColoredSymbol (char ch, enum SYMBOL_COLOR color) {
     switch(color) {
         case DEFAULT:
             printf("%s%c ", COLOR_DEFAULT, ch);
@@ -43,21 +44,21 @@ void draw (struct World* world) {
     for (size_t x = 0; x < FIELD_SIZE; x++) {
         for (size_t y = 0; y < FIELD_SIZE; y++) {
             if (x == FIELD_SIZE - world->player->coords.y - 1 && y == world->player->coords.x) { 
-                print_colored_symbol(PACMAN, GREEN);
+                printColoredSymbol(PACMAN, GREEN);
             } else if (x == 0 && y == FIELD_SIZE-1) {
-                print_colored_symbol(FOOD, BLUE);
+                printColoredSymbol(FOOD, BLUE);
             } else {
-                print_colored_symbol(CELL, DEFAULT);
+                printColoredSymbol(CELL, DEFAULT);
             }
         }
         printf("\n");
     }
     printf("\n");
 }
-uint read_instruction () {
+uint readInstruction () {
     printf("%s", COLOR_DEFAULT);
     puts("Enter the instruction:");
-    uint ins = read_uint();
+    uint ins = readUint();
     if (ins != LEFT && ins != BACK && ins!=RIGHT && ins!=FORWARD) {
         puts("Invalid instruction, exit");
         exit(0);
@@ -66,7 +67,7 @@ uint read_instruction () {
 }
 void start () {
     puts("Enter the size of field:");
-    FIELD_SIZE = read_uint();
+    FIELD_SIZE = readUint();
     if (FIELD_SIZE  < 2) {
         puts("N should be at least 2\n");
         exit(0);
@@ -97,25 +98,49 @@ void move (struct World* world, enum DIRECTION dir) {
     world->player->score++;
 }
 
-bool is_game_over (struct World* world) {
+bool isGameOver (struct World* world) {
     return world->player->coords.x == FOOD_X && world->player->coords.y == FOOD_Y;
 }
 
-void game_over (struct World* world) {
+void gameOver (struct World* world) {
     printf("GAME OVER!\nYour score: %u\n", world->player->score);
+    destroyWorld(world);
 }
-
-void game () {
-    struct Player player = {.coords = {.x = 0, .y = 0}, .score = 0};
-    struct World world = { .player = &player };
-    start();
-    draw(&world);
-    while (!is_game_over(&world)) {
-        uint ins = read_instruction();
-        move(&world, ins);
-        draw(&world);
+struct World* generateWorld () {
+    struct Player* player = (struct Player*) malloc(sizeof(struct Player));
+    if (!player) {
+        puts ("Memory allocation error");
+        exit(0);
     }
-    game_over(&world);
+    *player = (struct Player) {.coords = {.x = 0, .y = 0}, .score = 0};
+    struct World* world = (struct World*) malloc (sizeof(struct World));
+    if (!world) {
+        puts ("Memory allocation error");
+        exit(0);
+    }
+    *world = (struct World) { .player = player, .nTraps = 2};
+    return world;
+}
+void destroyWorld(struct World* world) {
+    if (world) {
+        if (world->player) {
+            free(world->player);
+            world->player = NULL;
+        }
+        free(world);
+        world = NULL;
+    }
+}
+void game () {
+    struct World* world = generateWorld();
+    start();
+    draw(world);
+    while (!isGameOver(world)) {
+        uint ins = readInstruction();
+        move(world, ins);
+        draw(world);
+    }
+    gameOver(world);
 }
 
 int main (int argc, char** argv) {

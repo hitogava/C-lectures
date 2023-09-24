@@ -11,7 +11,6 @@ typedef unsigned int uint;
 const char CELL = '+';
 const char FOOD = 'o';
 const char PACMAN = '<';
-const uint N_TRAPS = 2;
 
 struct Coord {
     uint x;
@@ -22,8 +21,9 @@ struct Player {
     uint score;
 };
 struct World {
+    uint nTraps;
     struct Player* player;
-    struct Coord traps[N_TRAPS];
+    struct Coord traps[];
 };
 enum DIRECTION {
     LEFT = 4,
@@ -37,15 +37,17 @@ enum SYMBOL_COLOR {
     RED,
     GREEN
 };
-uint read_uint ();
-uint read_instruction ();
+uint readUint ();
+uint readInstruction ();
 
 void draw (struct World* );
 void start ();
 void move (struct World* , enum DIRECTION );
 void game ();
-void print_colored_symbol (char ch, enum SYMBOL_COLOR color);
+struct World* generateWorld ();
+void destroyWorld (struct World*);
+void printColoredSymbol (char ch, enum SYMBOL_COLOR color);
 
-bool is_game_over (struct World* );
-void game_over (struct World* );
+bool isGameOver (struct World* );
+void gameOver (struct World* );
 #endif
