@@ -58,7 +58,7 @@ uint read_instruction () {
     printf("%s", COLOR_DEFAULT);
     puts("Enter the instruction:");
     uint ins = read_uint();
-    if (ins != 4 && ins != 5 && ins!=6 && ins!=8) {
+    if (ins != LEFT && ins != BACK && ins!=RIGHT && ins!=FORWARD) {
         puts("Invalid instruction, exit");
         exit(0);
     }
@@ -77,19 +77,19 @@ void start () {
 void move (struct Player* player, enum DIRECTION dir) {
     assert(player->coords.x < FIELD_SIZE && player->coords.y < FIELD_SIZE);
     switch (dir) {
-        case 4:
+        case LEFT:
             if (player->coords.x != 0) {
                 player->coords.x--;
             } break;
-        case 5:
+        case BACK:
             if (player->coords.y != 0) {
                 player->coords.y--;
             } break;
-        case 6:
+        case RIGHT:
             if (player->coords.x != FIELD_SIZE - 1) {
                 player->coords.x++;
             } break;
-        case 8:
+        case FORWARD:
             if (player->coords.y != FIELD_SIZE - 1) {
                 player->coords.y++;
             } break;
