@@ -5,12 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 typedef unsigned int uint;
 
 const char CELL = '+';
 const char FOOD = 'o';
 const char PACMAN = '<';
+const char TRAP = 'x';
 
 struct Coord {
     uint x;
@@ -22,8 +24,9 @@ struct Player {
 };
 struct World {
     uint nTraps;
+    uint fieldSize;
     struct Player* player;
-    struct Coord traps[];
+    struct Coord* traps;
 };
 enum DIRECTION {
     LEFT = 4,
@@ -41,11 +44,13 @@ uint readUint ();
 uint readInstruction ();
 
 void draw (struct World* );
-void start ();
+void start (struct World* );
 void move (struct World* , enum DIRECTION );
 void game ();
 struct World* generateWorld ();
 void destroyWorld (struct World*);
+void generateTraps (struct World*);
+bool isTrap (struct Coord, struct World*);
 void printColoredSymbol (char ch, enum SYMBOL_COLOR color);
 
 bool isGameOver (struct World* );

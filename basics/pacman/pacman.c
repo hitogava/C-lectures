@@ -6,7 +6,7 @@ const char* COLOR_RED = "\x1b[1;31m";
 const char* COLOR_GREEN = "\x1b[1;32m";
 const char* COLOR_BLUE = "\x1b[1;34m";
 
-uint FIELD_SIZE;
+// uint FIELD_SIZE;
 uint FOOD_X;
 uint FOOD_Y;
 uint readUint () {
@@ -38,15 +38,17 @@ void printColoredSymbol (char ch, enum SYMBOL_COLOR color) {
     }
 }
 void draw (struct World* world) {
-    assert(world->player->coords.x < FIELD_SIZE && world->player->coords.y < FIELD_SIZE);
+    assert(world->player->coords.x < world->fieldSize && world->player->coords.y < world->fieldSize);
     system("clear");
     printf("\n");
-    for (size_t x = 0; x < FIELD_SIZE; x++) {
-        for (size_t y = 0; y < FIELD_SIZE; y++) {
-            if (x == FIELD_SIZE - world->player->coords.y - 1 && y == world->player->coords.x) { 
+    for (size_t x = 0; x < world->fieldSize; x++) {
+        for (size_t y = 0; y < world->fieldSize; y++) {
+            if (x == world->fieldSize - world->player->coords.y - 1 && y == world->player->coords.x) { 
                 printColoredSymbol(PACMAN, GREEN);
-            } else if (x == 0 && y == FIELD_SIZE-1) {
+            } else if (x == 0 && y == world->fieldSize-1) {
                 printColoredSymbol(FOOD, BLUE);
+            } else if(isTrap((struct Coord) {.x = x, .y = y}, world)) {
+                printColoredSymbol(TRAP, RED);
             } else {
                 printColoredSymbol(CELL, DEFAULT);
             }
@@ -65,18 +67,18 @@ uint readInstruction () {
     }
     return ins;
 }
-void start () {
+void start (struct World* world) {
     puts("Enter the size of field:");
-    FIELD_SIZE = readUint();
-    if (FIELD_SIZE  < 2) {
+    world->fieldSize = readUint();
+    if (world->fieldSize  < 2) {
         puts("N should be at least 2\n");
         exit(0);
     }
-    FOOD_X = FIELD_SIZE - 1;
-    FOOD_Y = FIELD_SIZE - 1;
+    FOOD_X = world->fieldSize - 1;
+    FOOD_Y = world->fieldSize - 1;
 }
 void move (struct World* world, enum DIRECTION dir) {
-    assert(world->player->coords.x < FIELD_SIZE && world->player->coords.y < FIELD_SIZE);
+    assert(world->player->coords.x < world->fieldSize && world->player->coords.y < world->fieldSize);
     switch (dir) {
         case LEFT:
             if (world->player->coords.x != 0) {
@@ -87,11 +89,11 @@ void move (struct World* world, enum DIRECTION dir) {
                 world->player->coords.y--;
             } break;
         case RIGHT:
-            if (world->player->coords.x != FIELD_SIZE - 1) {
+            if (world->player->coords.x != world->fieldSize - 1) {
                 world->player->coords.x++;
             } break;
         case FORWARD:
-            if (world->player->coords.y != FIELD_SIZE - 1) {
+            if (world->player->coords.y != world->fieldSize - 1) {
                 world->player->coords.y++;
             } break;
     }
@@ -99,7 +101,8 @@ void move (struct World* world, enum DIRECTION dir) {
 }
 
 bool isGameOver (struct World* world) {
-    return world->player->coords.x == FOOD_X && world->player->coords.y == FOOD_Y;
+    return (world->player->coords.x == FOOD_X && world->player->coords.y == FOOD_Y) ||
+        isTrap((struct Coord) {.x = world->player->coords.x, .y = world->player->coords.y}, world);
 }
 
 void gameOver (struct World* world) {
@@ -109,23 +112,49 @@ void gameOver (struct World* world) {
 struct World* generateWorld () {
     struct Player* player = (struct Player*) malloc(sizeof(struct Player));
     if (!player) {
+        // TODO: write into stderr
         puts ("Memory allocation error");
         exit(0);
     }
     *player = (struct Player) {.coords = {.x = 0, .y = 0}, .score = 0};
     struct World* world = (struct World*) malloc (sizeof(struct World));
     if (!world) {
+        // TODO: write into stderr
         puts ("Memory allocation error");
         exit(0);
     }
     *world = (struct World) { .player = player, .nTraps = 2};
+    world->traps = malloc(sizeof(struct Coord) * world->nTraps);
+    if (!world->traps) {
+        // TODO: write into stderr
+        puts ("Memory allocation error");
+        exit(0);
+    }
     return world;
+}
+void generateTraps (struct World* world) {
+    // Need to handle amount of traps
+    for (size_t i = 0; i < world ->nTraps; i++) {
+        uint x = rand() % world->fieldSize;
+        uint y = rand() % world->fieldSize;
+        world->traps[i] = (struct Coord) { .x = x, .y = y};
+    }
+}
+bool isTrap (struct Coord coord, struct World* world) {
+    for (size_t i = 0; i < world ->nTraps; i++) {
+        if (world->traps[i].x == coord.x && world->traps[i].y == coord.y) {
+            return true;
+        }
+    }
+    return false;
 }
 void destroyWorld(struct World* world) {
     if (world) {
         if (world->player) {
             free(world->player);
+            free(world->traps);
             world->player = NULL;
+            world->traps = NULL;
         }
         free(world);
         world = NULL;
@@ -133,7 +162,8 @@ void destroyWorld(struct World* world) {
 }
 void game () {
     struct World* world = generateWorld();
-    start();
+    start(world);
+    generateTraps(world);
     draw(world);
     while (!isGameOver(world)) {
         uint ins = readInstruction();
