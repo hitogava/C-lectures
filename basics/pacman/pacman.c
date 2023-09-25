@@ -41,19 +41,31 @@ void draw (struct World* world) {
     assert(world->player->coords.x < world->fieldSize && world->player->coords.y < world->fieldSize);
     system("clear");
     printf("\n");
-    for (size_t x = 0; x < world->fieldSize; x++) {
-        for (size_t y = 0; y < world->fieldSize; y++) {
-            if (x == world->fieldSize - world->player->coords.y - 1 && y == world->player->coords.x) { 
+    for (int y = world->fieldSize - 1; y >= 0; y--) {
+        for (int x = 0; x < world->fieldSize; x++) {
+            if (x == world->player->coords.x && y == world->player->coords.y) {
                 printColoredSymbol(PACMAN, GREEN);
-            } else if (x == 0 && y == world->fieldSize-1) {
+            } else if (x == FOOD_X && y == FOOD_Y) {
                 printColoredSymbol(FOOD, BLUE);
-            } else if(isTrap((struct Coord) {.x = x, .y = y}, world)) {
+            } else if (isTrap((struct Coord) {.x = x, .y = y}, world)) {
                 printColoredSymbol(TRAP, RED);
             } else {
                 printColoredSymbol(CELL, DEFAULT);
             }
         }
         printf("\n");
+        // for (size_t y = 0; y < world->fieldSize; y++) {
+        //     if (x == world->fieldSize - world->player->coords.y - 1 && y == world->player->coords.x) { 
+        //         printColoredSymbol(PACMAN, GREEN);
+        //     } else if (x == 0 && y == world->fieldSize-1) {
+        //         printColoredSymbol(FOOD, BLUE);
+        //     } else if(isTrap((struct Coord) {.x = world->fieldSize - world->player->coords.x - 1, .y = y}, world)) {
+        //         printColoredSymbol(TRAP, RED);
+        //     } else {
+        //         printColoredSymbol(CELL, DEFAULT);
+        //     }
+        // }
+        // printf("\n");
     }
     printf("\n");
 }
@@ -123,7 +135,7 @@ struct World* generateWorld () {
         puts ("Memory allocation error");
         exit(0);
     }
-    *world = (struct World) { .player = player, .nTraps = 2};
+    *world = (struct World) { .player = player, .nTraps = 1};
     world->traps = malloc(sizeof(struct Coord) * world->nTraps);
     if (!world->traps) {
         // TODO: write into stderr
