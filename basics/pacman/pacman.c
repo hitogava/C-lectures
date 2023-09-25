@@ -54,18 +54,6 @@ void draw (struct World* world) {
             }
         }
         printf("\n");
-        // for (size_t y = 0; y < world->fieldSize; y++) {
-        //     if (x == world->fieldSize - world->player->coords.y - 1 && y == world->player->coords.x) { 
-        //         printColoredSymbol(PACMAN, GREEN);
-        //     } else if (x == 0 && y == world->fieldSize-1) {
-        //         printColoredSymbol(FOOD, BLUE);
-        //     } else if(isTrap((struct Coord) {.x = world->fieldSize - world->player->coords.x - 1, .y = y}, world)) {
-        //         printColoredSymbol(TRAP, RED);
-        //     } else {
-        //         printColoredSymbol(CELL, DEFAULT);
-        //     }
-        // }
-        // printf("\n");
     }
     printf("\n");
 }
