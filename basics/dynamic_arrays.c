@@ -43,7 +43,11 @@ int* findSubArr (int* arr1, size_t len1, int* arr2, size_t len2) {
 void removeSubArr (int* arr1, size_t* len1, int* arr2, size_t len2) {
     int* subArr = NULL;
     while ((subArr = findSubArr(arr1, *len1, arr2, len2))) {
-        int* arr3 = concatArr(arr1, *len1, arr2, len2, len1);
+        int* endSubArr = subArr + len2;
+        int* arr3 = concatArr(arr1, subArr - arr1, endSubArr, arr1 + (*len1) - endSubArr, len1);
+        // free(arr1);
+        arr1 = arr3;
+        printArr(arr1,*len1);
     }
 }
 
@@ -64,11 +68,13 @@ int main (void) {
     // size_t len3;
     // int* arr3 = concatArr(arr1, len1, arr2, len2, &len3);
     // printArr(arr3, len3);
-    int* subArr = findSubArr(arr1, len1, arr2, len2);
-    if (subArr) {
-        printf("%p %d\n", subArr, *subArr);
-    } else {
-        puts ("NULL");
-    }
+    // int* subArr = findSubArr(arr1, len1, arr2, len2);
+    // if (subArr) {
+    //     printf("%p %d\n", subArr, *subArr);
+    // } else {
+    //     puts ("NULL");
+    // }
+    removeSubArr(arr1, &len1, arr2, len2);
+    printArr(arr1, len1);
     return 0;
 }
