@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void swap(int *a, int *b) {
+void swap(int* a, int* b) {
     *a += *b;
     *b = *a - *b;
     *a -= *b;
@@ -24,26 +24,26 @@ size_t numDigits(int n) {
     return counter;
 }
 
-void scanfArr(int *array, size_t len) {
+void scanfArr(int* array, size_t len) {
     for (size_t i = 0; i < len; i++) {
         scanf("%d", &array[i]);
     }
 }
 
-void printArr(int *array, size_t len) {
+void printArr(int* array, size_t len) {
     for (size_t i = 0; i < len; i++) {
         printf("%d ", array[i]);
     }
     printf("\n");
 }
 
-void revertArr(int *array, size_t len) {
+void revertArr(int* array, size_t len) {
     for (size_t i = 0; i < len / 2; i++) {
         swap(&array[i], &array[len - i - 1]);
     }
 }
 
-int maxInArr(int *array, size_t len) {
+int maxInArr(int* array, size_t len) {
     int m = INT_MIN;
     for (size_t i = 0; i < len; i++) {
         m = max(m, array[i]);
@@ -51,7 +51,7 @@ int maxInArr(int *array, size_t len) {
     return m;
 }
 
-int *findInArr(int *array, size_t len, int x) {
+int* findInArr(int* array, size_t len, int x) {
     for (size_t i = 0; i < len; i++) {
         if (array[i] == x) {
             return &array[i];
@@ -60,7 +60,7 @@ int *findInArr(int *array, size_t len, int x) {
     return NULL;
 }
 
-void extractDigits(int *array, size_t len, int n) {
+void extractDigits(int* array, size_t len, int n) {
     int tmp = n;
     if (len < 10) {
         puts("Array length should be at least 10");
@@ -73,7 +73,7 @@ void extractDigits(int *array, size_t len, int n) {
     }
 }
 
-int compareArrays(int *arr1, size_t len1, int *arr2, size_t len2) {
+int compareArrays(int* arr1, size_t len1, int* arr2, size_t len2) {
     size_t minLen = min(len1, len2);
     for (size_t i = 0; i < minLen; i++) {
         if (arr1[i] < arr2[i]) {
@@ -95,7 +95,7 @@ int compareArrays(int *arr1, size_t len1, int *arr2, size_t len2) {
 void performDynamicMemory1() {
     size_t len;
     scanf("%zu", &len);
-    int *arr = (int *)malloc(len * sizeof(int));
+    int* arr = (int*)malloc(len * sizeof(int));
     if (!arr) {
         puts("Memory allocation error");
         exit(0);
@@ -109,7 +109,7 @@ void performDynamicMemory1() {
 
 // problem 08.2
 
-void moveElements(int *src, size_t srcLen, int *dest) {
+void moveElements(int* src, size_t srcLen, int* dest) {
     for (size_t i = 0; i < srcLen; i++) {
         dest[i] = src[i];
     }
@@ -117,10 +117,10 @@ void moveElements(int *src, size_t srcLen, int *dest) {
 
 void performDynamicMemory2() {
     int value;
-    int *src = NULL;
+    int* src = NULL;
     size_t currIndex = 0;
     do {
-        int *newArr = (int *)malloc((currIndex + 1) * sizeof(int));
+        int* newArr = (int*)malloc((currIndex + 1) * sizeof(int));
         if (!newArr) {
             exit(0);
         }
@@ -134,4 +134,4 @@ void performDynamicMemory2() {
     free(src);
 }
 
-int main(int argc, char **argv) { return EXIT_SUCCESS; }
+int main(int argc, char** argv) { return EXIT_SUCCESS; }

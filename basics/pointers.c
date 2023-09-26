@@ -6,13 +6,13 @@
 #include <sys/resource.h>
 // #include <unistd.h>
 
-void swap(int64_t *a, int64_t *b) {
+void swap(int64_t* a, int64_t* b) {
     *a += *b;
     *b = *a - *b;
     *a -= *b;
 }
 
-void evil_scanf(int *p0, int *p1, int *p2) {
+void evil_scanf(int* p0, int* p1, int* p2) {
     int n0, n1, n2;
     scanf("%d", &n0);
     scanf("%d", &n1);
@@ -32,9 +32,9 @@ void perform_evil_scanf() {
     int x = 9;
     int y = 11;
     int z = 13;
-    int *px = &x;
-    int *py = &y;
-    int *pz = &z;
+    int* px = &x;
+    int* py = &y;
+    int* pz = &z;
     evil_scanf(px, py, pz);
     printf("%d %d %d\n", x, y, z);
 }
@@ -51,7 +51,7 @@ void perform_problem_1() {
 }
 
 // problem 5
-void overflowFoo(char *head, char *curr) {
+void overflowFoo(char* head, char* curr) {
     char v;
     curr = &v;
     printf("%td\n", head - curr);
@@ -64,7 +64,7 @@ void perform_problem_5() {
     getrlimit(RLIMIT_STACK, &rl);
     printf("%lu\n", rl.rlim_cur);
 }
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     perform_problem_5();
     return 0;
 }

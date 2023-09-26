@@ -46,7 +46,7 @@ void problem_2() {
     scanf("%" SCNu64 "\n", &n);
     printf("%u\n", divs_amount(n));
 }
-void swap(uint64_t *a, uint64_t *b) {
+void swap(uint64_t* a, uint64_t* b) {
     int t = *a;
     *a = *b;
     *b = t;
@@ -65,7 +65,7 @@ void problem_3() {
     scanf("%" SCNu64, &b);
     printf("%" PRIu64 "\n", gcd(a, b));
 }
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     // problem_3();
     return 0;
 }

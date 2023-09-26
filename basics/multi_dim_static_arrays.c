@@ -3,7 +3,7 @@
 
 const size_t MATRIX_SIZE = 4;
 
-void swap(int *x, int *y) {
+void swap(int* x, int* y) {
     int tmp = *x;
     *x = *y;
     *y = tmp;
