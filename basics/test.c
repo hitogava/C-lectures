@@ -92,7 +92,7 @@ int compareArrays(int *arr1, size_t len1, int *arr2, size_t len2) {
 }
 
 // problem 08.1
-void performDynamicMemory1() {
+void performDynamicMemory() {
     size_t len;
     scanf("%zu", &len);
     int *arr = (int *)malloc(len * sizeof(int));
@@ -109,29 +109,18 @@ void performDynamicMemory1() {
 
 // problem 08.2
 
-void moveElements(int *src, size_t srcLen, int *dest) {
-    for (size_t i = 0; i < srcLen; i++) {
-        dest[i] = src[i];
-    }
-}
+void moveElements(int *src, size_t srcLen)
 
-void performDynamicMemory2() {
+    void problem_2() {
     int value;
-    int *src = NULL;
-    size_t currIndex = 0;
+    int *arr = NULL;
+    size_t size = 0;
     do {
-        int *newArr = (int *)malloc((currIndex + 1) * sizeof(int));
-        if (!newArr) {
-            exit(0);
-        }
-        moveElements(src, currIndex, newArr);
-        free(src);
-        src = newArr;
         scanf("%d", &value);
-        src[currIndex++] = value;
     } while (value);
-    printArr(src, currIndex);
-    free(src);
 }
 
-int main(int argc, char **argv) { return EXIT_SUCCESS; }
+int main(int argc, char **argv) {
+    // performDynamicMemory();
+    return EXIT_SUCCESS;
+}
