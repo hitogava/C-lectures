@@ -25,6 +25,7 @@ int* concatArr(int* arr1, size_t len1, int* arr2, size_t len2, size_t* resLen) {
 }
 
 int* findSubArr (int* arr1, size_t len1, int* arr2, size_t len2) {
+    if (len2 > len1) { return NULL; }
     for (size_t i = 0; i <= (len1 - len2); i++) {
         size_t j = 0;
         if (arr1[i] == arr2[j]) {
@@ -36,6 +37,14 @@ int* findSubArr (int* arr1, size_t len1, int* arr2, size_t len2) {
         }
     }
     return NULL;
+}
+
+// 0 1 8 7 4 1 8 7 6
+void removeSubArr (int* arr1, size_t* len1, int* arr2, size_t len2) {
+    int* subArr = NULL;
+    while ((subArr = findSubArr(arr1, *len1, arr2, len2))) {
+        int* arr3 = concatArr(arr1, *len1, arr2, len2, len1);
+    }
 }
 
 int main (void) {
