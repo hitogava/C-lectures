@@ -35,10 +35,16 @@ enum DIRECTION {
     FORWARD = 8,
 };
 enum SYMBOL_COLOR {
-    DEFAULT,
-    BLUE,
-    RED,
-    GREEN
+    COLOR_DEFAULT,
+    COLOR_BLUE,
+    COLOR_RED,
+    COLOR_GREEN
+};
+enum SYMBOLS {
+    SYMBOL_CELL,
+    SYMBOL_FOOD,
+    SYMBOL_PACMAN,
+    SYMBOL_TRAP
 };
 uint readUint ();
 uint readInstruction ();

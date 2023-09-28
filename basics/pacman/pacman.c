@@ -1,12 +1,13 @@
 #include "pacman.h"
 #include <stdlib.h>
 
-const char* COLOR_DEFAULT = "\x1b[0m";
-const char* COLOR_RED = "\x1b[1;31m";
-const char* COLOR_GREEN = "\x1b[1;32m";
-const char* COLOR_BLUE = "\x1b[1;34m";
+const char* COLORS[] = {
+    [COLOR_DEFAULT] = "\x1b[0m", 
+    [COLOR_RED] = "\x1b[1;31m",
+    [COLOR_GREEN] = "\x1b[1;32m",
+    [COLOR_BLUE] = "\x1b[1;34m",
+};
 
-// uint FIELD_SIZE;
 uint FOOD_X;
 uint FOOD_Y;
 uint readUint () {
@@ -23,17 +24,17 @@ uint readUint () {
 }
 void printColoredSymbol (char ch, enum SYMBOL_COLOR color) {
     switch(color) {
-        case DEFAULT:
-            printf("%s%c ", COLOR_DEFAULT, ch);
+        case COLOR_DEFAULT:
+            printf("%s%c ", COLORS[COLOR_DEFAULT], ch);
             break;
-        case RED:
-            printf("%s%c%s ", COLOR_RED, ch, COLOR_DEFAULT);
+        case COLOR_RED:
+            printf("%s%c%s ", COLORS[COLOR_RED], ch, COLORS[COLOR_DEFAULT]);
             break;
-        case BLUE:
-            printf("%s%c%s ", COLOR_BLUE, ch, COLOR_DEFAULT);
+        case COLOR_BLUE:
+            printf("%s%c%s ", COLORS[COLOR_BLUE], ch, COLORS[COLOR_DEFAULT]);
             break;
-        case GREEN:
-            printf("%s%c%s ", COLOR_GREEN, ch, COLOR_DEFAULT);
+        case COLOR_GREEN:
+            printf("%s%c%s ", COLORS[COLOR_GREEN], ch, COLORS[COLOR_DEFAULT]);
             break;
     }
 }
@@ -44,13 +45,13 @@ void draw (struct World* world) {
     for (int y = world->fieldSize - 1; y >= 0; y--) {
         for (int x = 0; x < world->fieldSize; x++) {
             if (x == world->player->coords.x && y == world->player->coords.y) {
-                printColoredSymbol(PACMAN, GREEN);
+                printColoredSymbol(PACMAN, COLOR_GREEN);
             } else if (x == FOOD_X && y == FOOD_Y) {
-                printColoredSymbol(FOOD, BLUE);
+                printColoredSymbol(FOOD, COLOR_BLUE);
             } else if (isTrap((struct Coord) {.x = x, .y = y}, world)) {
-                printColoredSymbol(TRAP, RED);
+                printColoredSymbol(TRAP, COLOR_RED);
             } else {
-                printColoredSymbol(CELL, DEFAULT);
+                printColoredSymbol(CELL, COLOR_DEFAULT);
             }
         }
         printf("\n");
@@ -58,7 +59,7 @@ void draw (struct World* world) {
     printf("\n");
 }
 uint readInstruction () {
-    printf("%s", COLOR_DEFAULT);
+    printf("%s", COLORS[COLOR_DEFAULT]);
     puts("Enter the instruction:");
     uint ins = readUint();
     if (ins != LEFT && ins != BACK && ins!=RIGHT && ins!=FORWARD) {
@@ -149,17 +150,11 @@ bool isTrap (struct Coord coord, struct World* world) {
     return false;
 }
 void destroyWorld(struct World* world) {
-    if (world) {
-        if (world->player) {
-            free(world->player);
-            free(world->traps);
-            world->player = NULL;
-            world->traps = NULL;
-        }
-        free(world);
-        world = NULL;
-    }
+    free(world->player);
+    free(world->traps);
+    free(world);
 }
+
 void game () {
     struct World* world = generateWorld();
     start(world);
@@ -169,8 +164,7 @@ void game () {
         uint ins = readInstruction();
         move(world, ins);
         draw(world);
-    }
-    gameOver(world);
+    } gameOver(world);
 }
 
 int main (int argc, char** argv) {
