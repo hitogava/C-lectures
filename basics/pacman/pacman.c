@@ -7,6 +7,12 @@ const char* COLORS[] = {
     [COLOR_GREEN] = "\x1b[1;32m",
     [COLOR_BLUE] = "\x1b[1;34m",
 };
+const char SYMBOLS[] = {
+    [SYMBOL_CELL] = '+',
+    [SYMBOL_FOOD] = 'o',
+    [SYMBOL_PACMAN] = '<',
+    [SYMBOL_TRAP] = 'x'
+};
 
 uint FOOD_X;
 uint FOOD_Y;
@@ -38,20 +44,26 @@ void printColoredSymbol (char ch, enum SYMBOL_COLOR color) {
             break;
     }
 }
+void printDebufInfo(struct World* world) {
+    printf("X: %u\nY: %u\n", world->player->coords.x, world->player->coords.y);
+}
 void draw (struct World* world) {
     assert(world->player->coords.x < world->fieldSize && world->player->coords.y < world->fieldSize);
     system("clear");
+#ifdef PRINT_DEBUG_INFO
+    printDebufInfo(world);
+#endif
     printf("\n");
     for (int y = world->fieldSize - 1; y >= 0; y--) {
         for (int x = 0; x < world->fieldSize; x++) {
             if (x == world->player->coords.x && y == world->player->coords.y) {
-                printColoredSymbol(PACMAN, COLOR_GREEN);
+                printColoredSymbol(SYMBOLS[SYMBOL_PACMAN], COLOR_GREEN);
             } else if (x == FOOD_X && y == FOOD_Y) {
-                printColoredSymbol(FOOD, COLOR_BLUE);
+                printColoredSymbol(SYMBOLS[SYMBOL_FOOD], COLOR_BLUE);
             } else if (isTrap((struct Coord) {.x = x, .y = y}, world)) {
-                printColoredSymbol(TRAP, COLOR_RED);
+                printColoredSymbol(SYMBOLS[SYMBOL_TRAP], COLOR_RED);
             } else {
-                printColoredSymbol(CELL, COLOR_DEFAULT);
+                printColoredSymbol(SYMBOLS[SYMBOL_CELL], COLOR_DEFAULT);
             }
         }
         printf("\n");

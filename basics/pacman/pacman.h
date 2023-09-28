@@ -1,5 +1,6 @@
 #ifndef PACMAN_H
 #define PACMAN_H
+#define PRINT_DEBUG_INFO
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -9,10 +10,6 @@
 
 typedef unsigned int uint;
 
-const char CELL = '+';
-const char FOOD = 'o';
-const char PACMAN = '<';
-const char TRAP = 'x';
 
 struct Coord {
     uint x;
@@ -58,6 +55,7 @@ void destroyWorld (struct World*);
 void generateTraps (struct World*);
 bool isTrap (struct Coord, struct World*);
 void printColoredSymbol (char ch, enum SYMBOL_COLOR color);
+void printDebufInfo (struct World*);
 
 bool isGameOver (struct World* );
 void gameOver (struct World* );
