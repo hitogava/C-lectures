@@ -146,6 +146,7 @@ void performTriangle() {
     // 1 4 6 4 1
     destroyTriangleArray(arr, rows);
 }
+
 #define INIT_CAPACITY 16
 int* evilScanArr(size_t* size, size_t* capacity) {
     int* array = malloc(sizeof(int) * *capacity);
@@ -164,9 +165,5 @@ int* evilScanArr(size_t* size, size_t* capacity) {
 }
 
 int main(void) {
-    size_t size;
-    size_t capacity = INIT_CAPACITY;
-    int* arr = evilScanArr(&size, &capacity);
-    printArr(arr, size);
     return 0;
 }
