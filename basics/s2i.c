@@ -7,7 +7,6 @@
 #include <math.h>
 
 typedef int32_t i32;
-typedef int8_t i8;
 typedef uint32_t ui32;
 
 #define STRING_FORMAT_ERROR 1
@@ -16,7 +15,7 @@ typedef uint32_t ui32;
 #define print_i32(n) printf("%" PRId32 "\n",n)
 
 /**
- * Magic number for convert 16 (or greater) base (A,B,...F) into integer representation
+ * Magic number for convert 16 (or greater) base (A,B,...F) symbols into integer representation
  * E.g: A (65 in ASCII) - HEX_MAGIC_NUMBER = 10
  */
 #define HEX_MAGIC_NUMBER 55
@@ -24,11 +23,9 @@ typedef uint32_t ui32;
 /**
  * If char contains non digit or letter of numeral system -> false else -> true
  */
-bool is_char_good(char ch, i8* digit) {
-    printf("start is_char_good %" PRId8 "\n",*digit);
+bool is_char_good(char ch, ui32* digit) {
     if('0' <= ch && ch <= '9') {
-        *digit = ch - '0';
-        printf("end is_char_good %" PRId8 "\n",*digit);
+        *digit = (ch - '0');
         return true;
     } else if('A' <= ch && ch <= 'F') { // boundaries are hardcoded
         *digit = ch - HEX_MAGIC_NUMBER;
@@ -37,8 +34,8 @@ bool is_char_good(char ch, i8* digit) {
     return false;
 }
 
-i8 ensure_format(char ch, ui32 base, jmp_buf* state) {
-    i8 digit;
+ui32 ensure_format(char ch, ui32 base, jmp_buf* state) {
+    ui32 digit;
     bool is_good = is_char_good(ch, &digit);
     if (is_good && digit < base) {
         return digit;
@@ -55,11 +52,11 @@ i32 s2i(const char* string, ui32 base, jmp_buf* state) {
     ui32 power = 0;
     size_t string_len = strlen(string);
     // 1 -> positive, -1 -> negative
-    i8 sign = string_len > 0 && string[0] == '-' ? -1 : 1;
+    ui32 sign = string_len > 0 && string[0] == '-' ? -1 : 1;
     for (int i = string_len - 1; i >= 0; i--) {
         char ch = string[i];
         if (i == 0 && ch == '-') { continue; }
-        i8 digit = ensure_format(ch, base, state);
+        ui32 digit = ensure_format(ch, base, state);
         result += digit * (i32)(pow(base,power++));
     }
     result *= sign;
@@ -73,7 +70,7 @@ int main() {
         puts("String format error");
         exit(0);
     }
-    char* str = "100101";
+    char* str = "123";
     i32 str_to_int = s2i(str, 3, &state);
     print_i32(str_to_int);
     return 0;
