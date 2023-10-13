@@ -7,12 +7,10 @@
 #define MAX_BUFFER_LENGTH 100
 
 #define VEC_INIT_CAPACITY 8
-#define string_vec_print(vec)               \
-    for(size_t i = 0; i < vec->length; i++) \
-        printf("%s\n", vec->data[i]);       
+
 void alloc_guard(void* ptr) {
     if(!ptr) {
-        printf("Allocation error occured in %s on line %d\n",__FILE__, __LINE__);
+        printf("Allocation error occured in %s on line %d\n", __FILE__, __LINE__);
         exit(0);
     } 
 }
@@ -21,14 +19,12 @@ typedef struct string_vec {
     size_t capacity;
     char** data;
 } string_vec;
-string_vec* string_vec_init() {
-    string_vec* vec = malloc(sizeof(string_vec));
+void string_vec_init(string_vec* vec) {
+    if (!vec) { return; }
     vec->length = 0;
     vec->capacity = VEC_INIT_CAPACITY;
     vec->data = malloc(vec->capacity * sizeof(char*));
-    alloc_guard(vec);
     alloc_guard(vec->data);
-    return vec;
 }
 void ensure_capacity(string_vec* self) {
     if (!self) { return; }
@@ -41,7 +37,7 @@ void ensure_capacity(string_vec* self) {
 }
 void string_vec_push_back(string_vec* self, const char* str) {
     ensure_capacity(self);
-    // extra byte for null terminated char
+    // extra byte for '\0'
     self->data[self->length] = malloc(strlen(str) + 1);
     alloc_guard(&self->data[self->length]);
     strcpy(self->data[self->length],str);
@@ -94,23 +90,23 @@ char* trim(const char* source) {
     while (source[i] == ' ') i++;
     // If source string contains only spaces or empty - return empty string
     if (i > j || source_size == 0) {
-        char* trimmed = malloc(1);
-        if (!trimmed)
-            exit(0);
+        char* trimmed = malloc(sizeof(char));
+        alloc_guard(trimmed);
         trimmed[0] = '\0';
         return trimmed;
     }
     while (source[j] == ' ') j--;
     size_t trimmed_size = j - i + 1;
     char* trimmed = malloc(trimmed_size + 1);
-    if (!trimmed)
-        exit(0);
+    alloc_guard(trimmed);
     strncpy(trimmed, source + i, trimmed_size);
     trimmed[trimmed_size] = '\0';
     return trimmed;
 }
 string_vec* split(const char* str) {
-    string_vec* vec = string_vec_init();
+    string_vec* vec = malloc(sizeof(string_vec));
+    alloc_guard(vec);
+    string_vec_init(vec);
     const char* trimmed = trim(str);
     size_t trimmed_len = strlen(trimmed);
     char buffer[MAX_BUFFER_LENGTH];
@@ -130,12 +126,5 @@ string_vec* split(const char* str) {
     return vec;
 }
 int main() {
-    // const char* str = "a b c d e f f  f dfds  sdf sd s dsf sd fds fds fds fds fds ffdsfklsdjferoi  oirej oire j oierjoi";
-    const char* str = "a  b   f ddd ee   ";
-    string_vec* splitted_string = split(str);
-    for(size_t i = 0; i < splitted_string->length; i++) {
-        printf("%s\n", splitted_string->data[i]);
-    }
-    string_vec_drop(splitted_string);
     return 0;
 }
