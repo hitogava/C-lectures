@@ -37,10 +37,12 @@ void ensure_capacity(string_vec* self) {
 }
 void string_vec_push_back(string_vec* self, const char* str) {
     ensure_capacity(self);
+    size_t str_len = strlen(str);
     // extra byte for '\0'
-    self->data[self->length] = malloc(strlen(str) + 1);
+    self->data[self->length] = malloc(str_len + 1);
     alloc_guard(&self->data[self->length]);
     strcpy(self->data[self->length],str);
+    self->data[self->length][str_len] = '\0';
     self->length++;
 }
 void string_vec_drop(string_vec* self) {
